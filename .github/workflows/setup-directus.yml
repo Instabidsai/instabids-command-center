@@ -1,0 +1,29 @@
+name: Setup Directus
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/setup-directus.js'
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Run Directus Setup
+      env:
+        DIRECTUS_URL: https://instabids-directus-server-n6skd.ondigitalocean.app
+        ADMIN_EMAIL: admin@instabids.ai
+        ADMIN_PASSWORD: ${{ secrets.DIRECTUS_ADMIN_PASSWORD }}
+      run: npm run setup
