@@ -1,0 +1,25 @@
+# Replace with your actual domain
+command.instabids.ai {
+    reverse_proxy directus:8055
+    
+    # Enable compression
+    encode gzip
+    
+    # Security headers
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy no-referrer-when-downgrade
+    }
+}
+
+# Redirect www to non-www
+www.command.instabids.ai {
+    redir https://command.instabids.ai{uri} permanent
+}
+
+# Local development (when PUBLIC_URL is localhost)
+:80 {
+    reverse_proxy directus:8055
+}
