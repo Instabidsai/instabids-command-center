@@ -1,0 +1,83 @@
+name: instabids-command-center
+region: nyc
+features:
+  - buildpack-stack=ubuntu-22
+
+services:
+  - name: directus
+    dockerfile_path: Dockerfile
+    source_dir: /
+    http_port: 8055
+    instance_size_slug: apps-s-2vcpu-4gb
+    instance_count: 1
+    routes:
+      - path: /
+    envs:
+      - key: KEY
+        type: SECRET
+        value: "your-random-key-here"
+      - key: SECRET
+        type: SECRET
+        value: "your-random-secret-here"
+      - key: DB_CLIENT
+        value: "postgres"
+      - key: DB_HOST
+        value: "${db.HOSTNAME}"
+      - key: DB_PORT
+        value: "${db.PORT}"
+      - key: DB_DATABASE
+        value: "${db.DATABASE}"
+      - key: DB_USER
+        value: "${db.USERNAME}"
+      - key: DB_PASSWORD
+        value: "${db.PASSWORD}"
+      - key: DB_SSL
+        value: "true"
+      - key: CACHE_ENABLED
+        value: "true"
+      - key: CACHE_STORE
+        value: "redis"
+      - key: REDIS_HOST
+        value: "${redis.HOSTNAME}"
+      - key: REDIS_PORT
+        value: "${redis.PORT}"
+      - key: REDIS_PASSWORD
+        value: "${redis.PASSWORD}"
+      - key: ADMIN_EMAIL
+        value: "admin@instabidsai.com"
+      - key: ADMIN_PASSWORD
+        type: SECRET
+        value: "your-initial-admin-password"
+      - key: PUBLIC_URL
+        value: "https://${APP_DOMAIN}"
+      - key: STORAGE_LOCATIONS
+        value: "spaces"
+      - key: STORAGE_SPACES_DRIVER
+        value: "s3"
+      - key: STORAGE_SPACES_PUBLIC_URL
+        value: "https://instabids-files.nyc3.digitaloceanspaces.com"
+      - key: STORAGE_SPACES_KEY
+        type: SECRET
+        value: "your-spaces-access-key"
+      - key: STORAGE_SPACES_SECRET
+        type: SECRET
+        value: "your-spaces-secret-key"
+      - key: STORAGE_SPACES_BUCKET
+        value: "instabids-files"
+      - key: STORAGE_SPACES_REGION
+        value: "nyc3"
+      - key: STORAGE_SPACES_ENDPOINT
+        value: "https://nyc3.digitaloceanspaces.com"
+
+databases:
+  - name: db
+    engine: PG
+    version: "15"
+    size: db-s-1vcpu-1gb
+    num_nodes: 1
+
+  - name: redis
+    engine: REDIS
+    version: "7"
+    size: db-s-1vcpu-1gb
+    num_nodes: 1
